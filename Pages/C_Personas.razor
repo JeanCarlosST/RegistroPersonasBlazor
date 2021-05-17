@@ -1,0 +1,105 @@
+﻿@page "/c_personas"
+
+
+<div class="row d-flex justify-content-center">
+
+    <div class="col-11">
+
+        <div class="card mt-5">
+
+            <div class="card-header">
+                <h3>Consulta de personas</h3>
+            </div>
+
+            <div class="card-body">
+                <form>
+                    <div class="input-group">
+                        <select class="form-control" @bind="Filtro" style="width:150px;">
+                            <option value="0">Filtro</option>
+                            <option value="1">Nombres</option>
+                            <option value="2">Apellidos</option>
+                            <option value="3">Cédula</option>
+                            <option value="4">Dirección</option>
+                        </select>
+                        <input type="text" class="form-control" @bind="Criterio" placeholder="Criterio"/>
+                        <button class="btn btn-primary" type="button" @onclick="Buscar">Buscar</button>
+                    </div>
+
+                    <table class="table mt-4">
+                        <thead>
+                            <tr>
+                                <th>Persona ID</th>
+                                <th>Nombres</th>
+                                <th>Apellidos</th>
+                                <th>Cédula</th>
+                                <th>Dirección</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Personas)
+                            {
+                                <tr>
+                                    <th>@item.PersonaID</th>
+                                    <td>@item.Nombres</td>
+                                    <td>@item.Apellidos</td>
+                                    <td>@item.Cedula</td>
+                                    <td>@item.Direccion</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    public List<Personas> Personas { get; set; }
+    public string Filtro { get; set; }
+    public string Criterio { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Nuevo();
+    }
+
+    private void Nuevo()
+    {
+        Personas = new List<Personas>();
+        Filtro = "0";
+        Criterio = string.Empty;
+    }
+
+    private void Buscar()
+    {
+        Personas = new List<Personas>();
+        if(Criterio.Length > 0)
+        {
+            switch(Filtro)
+            {
+                case "0":
+                    Personas = PersonasBLL.GetList(p => true);
+                    break;
+                case "1":
+                    Personas = PersonasBLL.GetList(p => p.Nombres.ToLower().Contains(Criterio.ToLower()));
+                    break;
+                case "2":
+                    Personas = PersonasBLL.GetList(p => p.Apellidos.ToLower().Contains(Criterio.ToLower()));
+                    break;
+                case "3":
+                    Personas = PersonasBLL.GetList(p => p.Cedula.ToLower().Contains(Criterio.ToLower()));
+                    break;
+                case "4":
+                    Personas = PersonasBLL.GetList(p => p.Direccion.ToLower().Contains(Criterio.ToLower()));
+                    break;
+            }
+        } 
+        else
+        {
+            Personas = PersonasBLL.GetList(p => true);
+        }
+    }
+}

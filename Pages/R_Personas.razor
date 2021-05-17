@@ -1,0 +1,188 @@
+﻿@page "/r_personas"
+
+@inject IToastService toast 
+
+<EditForm Model="persona" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+
+    <div class="row d-flex justify-content-center">
+
+        <div class="col-md-6 col-sm-11 col-11">
+
+            <div class="card mt-5">
+
+                <div class="card-header">
+                    <h3>Registro de personas</h3>
+                </div>
+
+                <div class="card-body">
+                    <form>
+                        @*PersonaID*@
+                        <div class="input-group my-2">
+                            <label class="input-group-text col-md-3 col-4">ID</label>
+                            <InputNumber class="form-control" @bind-Value="persona.PersonaID" />
+                            <button class="btn btn-warning" type="button" @onclick="Buscar">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                </svg> Buscar
+                            </button>
+                        </div>
+
+                        @*Nombres*@
+                        <div class="input-group my-2">
+                            <label class="input-group-text col-md-3 col-4">Nombres</label>
+                            <InputText class="form-control" @bind-Value="persona.Nombres" />
+                        </div>
+                        <ValidationMessage For="@(()=> persona.Nombres)"/>
+
+                        @*Apellidos*@
+                        <div class="input-group my-2">
+                            <label class="input-group-text col-md-3 col-4">Apellidos</label>
+                            <InputText class="form-control" @bind-Value="persona.Apellidos" />
+                        </div>
+                        <ValidationMessage For="@(()=> persona.Apellidos)" />
+
+                        @*Cedula*@
+                        <div class="input-group my-2">
+                            <label class="input-group-text col-md-3 col-4">Cedula</label>
+                            <InputText class="form-control" @bind-Value="persona.Cedula" />
+                        </div>
+                        <ValidationMessage For="@(()=> persona.Cedula)" />
+
+                        @*Direccion*@
+                        <div class="input-group my-2">
+                            <label class="input-group-text col-md-3 col-4">Dirección</label>
+                            <InputText class="form-control" @bind-Value="persona.Direccion" />
+                        </div>
+                        <ValidationMessage For="@(()=> persona.Direccion)" />
+
+                        @*FechaNacimiento*@
+                        <div class="input-group my-2">
+                            <label class="input-group-text col-md-3 col-4">Nacimiento</label>
+                            <InputDate class="form-control" @bind-Value="persona.FechaNacimiento" />
+                            <ValidationMessage For="@(()=> persona.FechaNacimiento)" />
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-footer">
+
+                    <div class="container">
+
+                        <div class="row justify-content-center">
+
+                            <button class="col btn btn-primary mx-2 my-2" type="button" @onclick="Nuevo">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark" viewBox="0 0 16 16">
+                                    <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z" />
+                                </svg> Nuevo
+                            </button>
+
+                            <button class="col btn btn-success mx-2 my-2" type="button">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-check" viewBox="0 0 16 16">
+                                    <path d="M10.854 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 8.793l2.646-2.647a.5.5 0 0 1 .708 0z" />
+                                    <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z" />
+                                </svg> Guardar
+                            </button>
+
+                            <button class="col btn btn-danger mx-2 my-2" type="button" @onclick="Eliminar">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-x" viewBox="0 0 16 16">
+                                    <path d="M6.854 7.146a.5.5 0 1 0-.708.708L7.293 9l-1.147 1.146a.5.5 0 0 0 .708.708L8 9.707l1.146 1.147a.5.5 0 0 0 .708-.708L8.707 9l1.147-1.146a.5.5 0 0 0-.708-.708L8 8.293 6.854 7.146z" />
+                                    <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z" />
+                                </svg> Eliminar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+
+    private Personas persona = new Personas();
+
+    protected override void OnInitialized()
+    {
+        Nuevo();
+        Buscar();
+    }
+
+    public void Nuevo()
+    {
+        persona = new Personas();
+    }
+
+    private void Buscar()
+    {
+        var encontrado = PersonasBLL.Buscar(persona.PersonaID);
+
+        if (encontrado != null)
+            this.persona = encontrado;
+        else
+            toast.ShowWarning("Persona no encontrada");
+    }
+
+    public void Guardar()
+    {
+        //if (!Validar())
+        //    return;
+
+        bool guardado = PersonasBLL.Guardar(persona);
+
+        if (guardado)
+        {
+            Nuevo();
+            toast.ShowSuccess("Persona guardada correctamente");
+        }
+        else
+            toast.ShowError("No se pudo guardar a la persona");
+    }
+
+    //private bool Validar()
+    //{
+    //    bool esValido = true;
+
+    //    if(persona.Nombres.Length == 0)
+    //    {
+    //        toast.ShowError("Ingrese un nombre");
+    //        esValido = true;
+    //    }
+    //    if (persona.Apellidos.Length == 0)
+    //    {
+    //        toast.ShowError("Ingrese un apellido");
+    //        esValido = true;
+    //    }
+    //    if (persona.Cedula.Length == 0)
+    //    {
+    //        toast.ShowError("Ingrese un nombres");
+    //        esValido = true;
+    //    }
+    //    if (persona.Direccion.Length == 0)
+    //    {
+    //        toast.ShowError("Ingrese un nombres");
+    //        esValido = true;
+    //    }
+    //    //if (persona.FechaNacimiento > DateTime.Now)
+    //    //{
+    //    //    toast.ShowError(persona.FechaNacimiento.requuir);
+    //    //    esValido = true;
+    //    //}
+
+    //    return true;
+    //}
+
+    public void Eliminar()
+    {
+        bool eliminado = PersonasBLL.Eliminar(persona.PersonaID);
+
+        if (eliminado)
+        {
+            Nuevo();
+            toast.ShowSuccess("Persona eliminada correctamente");
+        }
+        else
+            toast.ShowError("No se pudo eliminar a la persona");
+    }
+}
