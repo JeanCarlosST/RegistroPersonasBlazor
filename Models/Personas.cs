@@ -20,7 +20,7 @@ namespace RegistroPersonasBlazor.Models
         [Required(ErrorMessage = "Ingrese la cédula")]
         public string Cedula { get; set; }
 
-        [Required(ErrorMessage = "Ingrese una direccion")]
+        [Required(ErrorMessage = "Ingrese una dirección")]
         public string Direccion { get; set; }
 
         [Required(ErrorMessage = "Ingrese una fecha")]

@@ -2,7 +2,7 @@
 
 @inject IToastService toast 
 
-<EditForm Model="persona" OnValidSubmit="Guardar">
+<EditForm Model="Persona" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
 
     <div class="row d-flex justify-content-center">
@@ -20,7 +20,7 @@
                         @*PersonaID*@
                         <div class="input-group my-2">
                             <label class="input-group-text col-md-3 col-4">ID</label>
-                            <InputNumber class="form-control" @bind-Value="persona.PersonaID" />
+                            <InputNumber class="form-control" @bind-Value="Persona.PersonaID" />
                             <button class="btn btn-warning" type="button" @onclick="Buscar">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                                     <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
@@ -31,42 +31,43 @@
                         @*Nombres*@
                         <div class="input-group my-2">
                             <label class="input-group-text col-md-3 col-4">Nombres</label>
-                            <InputText class="form-control" @bind-Value="persona.Nombres" />
+                            <InputText class="form-control" @bind-Value="Persona.Nombres" />
                         </div>
-                        <ValidationMessage For="@(()=> persona.Nombres)"/>
+                            <ValidationMessage For="@(()=> Persona.Nombres)"/>
 
                         @*Apellidos*@
                         <div class="input-group my-2">
                             <label class="input-group-text col-md-3 col-4">Apellidos</label>
-                            <InputText class="form-control" @bind-Value="persona.Apellidos" />
+                            <InputText class="form-control" @bind-Value="Persona.Apellidos" />
                         </div>
-                        <ValidationMessage For="@(()=> persona.Apellidos)" />
+                            <ValidationMessage For="@(()=> Persona.Apellidos)" />
 
                         @*Cedula*@
                         <div class="input-group my-2">
                             <label class="input-group-text col-md-3 col-4">Cedula</label>
-                            <InputText class="form-control" @bind-Value="persona.Cedula" />
+                            <InputText class="form-control" @bind-Value="Persona.Cedula" />
                         </div>
-                        <ValidationMessage For="@(()=> persona.Cedula)" />
+                            <ValidationMessage For="@(()=> Persona.Cedula)" />
 
                         @*Direccion*@
                         <div class="input-group my-2">
                             <label class="input-group-text col-md-3 col-4">Dirección</label>
-                            <InputText class="form-control" @bind-Value="persona.Direccion" />
+                            <InputText class="form-control" @bind-Value="Persona.Direccion" />
                         </div>
-                        <ValidationMessage For="@(()=> persona.Direccion)" />
+                            <ValidationMessage For="@(()=> Persona.Direccion)" />
 
                         @*FechaNacimiento*@
                         <div class="input-group my-2">
                             <label class="input-group-text col-md-3 col-4">Nacimiento</label>
-                            <InputDate class="form-control" @bind-Value="persona.FechaNacimiento" />
-                            <ValidationMessage For="@(()=> persona.FechaNacimiento)" />
+                            <InputDate class="form-control" @bind-Value="Persona.FechaNacimiento" />
                         </div>
+                            <ValidationMessage For="@(()=> Persona.FechaNacimiento)" />
                     </form>
                 </div>
 
                 <div class="card-footer">
 
+                    @*Botones*@
                     <div class="container">
 
                         <div class="row justify-content-center">
@@ -77,7 +78,7 @@
                                 </svg> Nuevo
                             </button>
 
-                            <button class="col btn btn-success mx-2 my-2" type="button">
+                            <button class="col btn btn-success mx-2 my-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-check" viewBox="0 0 16 16">
                                     <path d="M10.854 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 8.793l2.646-2.647a.5.5 0 0 1 .708 0z" />
                                     <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z" />
@@ -101,7 +102,7 @@
 
 @code {
 
-    private Personas persona = new Personas();
+    private Personas Persona = new Personas();
 
     protected override void OnInitialized()
     {
@@ -111,25 +112,22 @@
 
     public void Nuevo()
     {
-        persona = new Personas();
+        Persona = new Personas();
     }
 
     private void Buscar()
     {
-        var encontrado = PersonasBLL.Buscar(persona.PersonaID);
+        var encontrado = PersonasBLL.Buscar(Persona.PersonaID);
 
         if (encontrado != null)
-            this.persona = encontrado;
+            this.Persona = encontrado;
         else
             toast.ShowWarning("Persona no encontrada");
     }
 
     public void Guardar()
     {
-        //if (!Validar())
-        //    return;
-
-        bool guardado = PersonasBLL.Guardar(persona);
+        bool guardado = PersonasBLL.Guardar(Persona);
 
         if (guardado)
         {
@@ -137,45 +135,12 @@
             toast.ShowSuccess("Persona guardada correctamente");
         }
         else
-            toast.ShowError("No se pudo guardar a la persona");
+            toast.ShowError("No se pudo guardar a la Persona");
     }
-
-    //private bool Validar()
-    //{
-    //    bool esValido = true;
-
-    //    if(persona.Nombres.Length == 0)
-    //    {
-    //        toast.ShowError("Ingrese un nombre");
-    //        esValido = true;
-    //    }
-    //    if (persona.Apellidos.Length == 0)
-    //    {
-    //        toast.ShowError("Ingrese un apellido");
-    //        esValido = true;
-    //    }
-    //    if (persona.Cedula.Length == 0)
-    //    {
-    //        toast.ShowError("Ingrese un nombres");
-    //        esValido = true;
-    //    }
-    //    if (persona.Direccion.Length == 0)
-    //    {
-    //        toast.ShowError("Ingrese un nombres");
-    //        esValido = true;
-    //    }
-    //    //if (persona.FechaNacimiento > DateTime.Now)
-    //    //{
-    //    //    toast.ShowError(persona.FechaNacimiento.requuir);
-    //    //    esValido = true;
-    //    //}
-
-    //    return true;
-    //}
 
     public void Eliminar()
     {
-        bool eliminado = PersonasBLL.Eliminar(persona.PersonaID);
+        bool eliminado = PersonasBLL.Eliminar(Persona.PersonaID);
 
         if (eliminado)
         {
@@ -183,6 +148,6 @@
             toast.ShowSuccess("Persona eliminada correctamente");
         }
         else
-            toast.ShowError("No se pudo eliminar a la persona");
+            toast.ShowError("No se pudo eliminar a la Persona");
     }
 }
