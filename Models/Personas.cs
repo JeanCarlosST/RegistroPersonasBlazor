@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,5 +26,10 @@ namespace RegistroPersonasBlazor.Models
 
         [Required(ErrorMessage = "Ingrese una fecha")]
         public DateTime FechaNacimiento { get; set; } = DateTime.Now;
+
+        public float Balance { get; set; }
+
+        [ForeignKey("PersonaID")]
+        public virtual List<Prestamos> Prestamos { get; set; } = new List<Prestamos>();
     }
 }
