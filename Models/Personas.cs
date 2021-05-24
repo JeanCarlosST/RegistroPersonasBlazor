@@ -19,6 +19,7 @@ namespace RegistroPersonasBlazor.Models
         public string Apellidos { get; set; }
 
         [Required(ErrorMessage = "Ingrese la cédula")]
+        [RegularExpression(@"^\b\d{3}-\d{7}-\d$", ErrorMessage = "Ingrese una cédula válida")]
         public string Cedula { get; set; }
 
         [Required(ErrorMessage = "Ingrese una dirección")]

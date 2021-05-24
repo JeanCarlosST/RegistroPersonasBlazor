@@ -14,12 +14,12 @@ namespace RegistroPersonasBlazor.Models
         [Required(ErrorMessage = "Ingrese una fecha")]
         public DateTime Fecha { get; set; } = DateTime.Now;
 
-        [Required(ErrorMessage = "Selecciona una persona")]
+        [RegularExpression(@"^[1-9]\d*$", ErrorMessage = "Ingrese una persona")]
         public int PersonaID { get; set; }
 
         public String Concepto { get; set; }
 
-        [Required(ErrorMessage = "Ingrese un monto")]
+        [RegularExpression(@"^[1-9]\d*.\d*?$", ErrorMessage = "Ingrese un monto válido")]
         public float Monto { get; set; }
 
         [Required(ErrorMessage = "Ingrese un balance")]
