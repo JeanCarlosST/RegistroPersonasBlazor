@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RegistroPersonasBlazor.DAL;
 using RegistroPersonasBlazor.Data;
+using Syncfusion.Blazor;
 
 namespace RegistroPersonasBlazor
 {
@@ -32,14 +33,13 @@ namespace RegistroPersonasBlazor
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddBlazoredToast();
-            //services.AddDbContext<Contexto>(op =>
-            //    op.UseSqlite(Configuration.GetConnectionString("DefaulConnection"))
-            //);
+            services.AddSyncfusionBlazor();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NDQ4ODE1QDMxMzkyZTMxMmUzMGtCMTR2cm5STUt3aW1Nc2poc0JPMVN1T3pmRStpQzY0TEJXRldIUklIYnM9");
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

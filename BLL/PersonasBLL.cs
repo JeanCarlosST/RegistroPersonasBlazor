@@ -7,13 +7,16 @@ using RegistroPersonasBlazor.DAL;
 using RegistroPersonasBlazor.Models;
 
 namespace RegistroPersonasBlazor.BLL{
+
     public class PersonasBLL{
+
         public static bool Guardar(Personas persona){
             if(!Existe(persona.PersonaID))
                 return Insertar(persona); 
             else    
                 return Modificar(persona);
         }
+
         private static bool Insertar(Personas persona){
             Contexto context = new Contexto();
             bool found = false;
@@ -31,6 +34,7 @@ namespace RegistroPersonasBlazor.BLL{
 
             return found;
         }
+
         public static bool Modificar(Personas persona){
             Contexto context = new Contexto();
             bool found = false;
@@ -48,6 +52,7 @@ namespace RegistroPersonasBlazor.BLL{
 
             return found;
         }
+
         public static bool Eliminar(int id){
             Contexto context = new Contexto();
             bool found = false;
@@ -69,6 +74,7 @@ namespace RegistroPersonasBlazor.BLL{
 
             return found;
         }
+
         public static Personas Buscar(int id){
             Contexto context = new Contexto();
             Personas persona;
@@ -85,6 +91,7 @@ namespace RegistroPersonasBlazor.BLL{
 
             return persona;
         }
+
         public static bool Existe(int id){
             Contexto context = new Contexto();
             bool found = false;
