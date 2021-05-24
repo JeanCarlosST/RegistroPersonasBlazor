@@ -1,14 +1,13 @@
-﻿@page "/c_personas"
-
+﻿@page "/c_prestamos"
 
 <div class="row d-flex justify-content-center">
 
     <div class="col-11">
 
-        <div class="card mt-1">
+        <div class="card ">
 
             <div class="card-header">
-                <h3>Consulta de personas</h3>
+                <h3>Consulta de préstamos</h3>
             </div>
 
             <div class="card-body">
@@ -23,45 +22,45 @@
 
                         <div class="input-group my-2 col">
                             <label class="input-group-text">Desde</label>
-                            <input class="form-control" type="date" @bind="FechaDesde" />
+                            <input class="form-control" type="date" @bind="FechaDesde"/>
                             <label class="input-group-text">Hasta</label>
-                            <input class="form-control" type="date" @bind="FechaHasta" />
+                            <input class="form-control" type="date" @bind="FechaHasta"/>
                         </div>
                     </div>
 
                     <div class="input-group my-2">
                         <select class="form-control col-3" @bind="Filtro" style="width:150px;">
                             <option value="0">Filtro</option>
-                            <option value="1">Nombres</option>
-                            <option value="2">Apellidos</option>
-                            <option value="3">Cédula</option>
-                            <option value="4">Dirección</option>
+                            <option value="1">Persona</option>
+                            <option value="2">Concepto</option>
                         </select>
-                        <input type="text" class="form-control" @bind="Criterio" placeholder="Criterio" />
+                        <input type="text" class="form-control" @bind="Criterio" placeholder="Criterio"/>
                         <button class="btn btn-primary" type="button" @onclick="Buscar">Buscar</button>
                     </div>
 
                     <table class="table mt-4">
                         <thead>
                             <tr>
-                                <th>Persona ID</th>
-                                <th>Nombres</th>
-                                <th>Apellidos</th>
-                                <th>Fecha de nacimiento</th>
-                                <th>Cédula</th>
-                                <th>Dirección</th>
+                                <th>ID</th>
+                                <th>Fecha</th>
+                                <th>Persona</th>
+                                <th>Concepto</th>
+                                <th>Monto</th>
+                                <th>Balance</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Personas)
+                            @foreach (var prestamo in Prestamos)
                             {
+                                var persona = @PersonasBLL.Buscar(prestamo.PersonaID);
+
                                 <tr>
-                                    <th>@item.PersonaID</th>
-                                    <td>@item.Nombres</td>
-                                    <td>@item.Apellidos</td>
-                                    <td>@item.FechaNacimiento.ToString("dd-MM-yyyy")</td>
-                                    <td>@item.Cedula</td>
-                                    <td>@item.Direccion</td>
+                                    <th>@prestamo.PrestamoID</th>
+                                    <td>@prestamo.Fecha</td>
+                                    <td>@persona.Apellidos, @persona.Nombres</td>
+                                    <td>@prestamo.Concepto</td>
+                                    <td>@prestamo.Monto.ToString("N2")</td>
+                                    <td>@prestamo.Balance.ToString("N2")</td>
                                 </tr>
                             }
                         </tbody>
@@ -75,7 +74,7 @@
 
 
 @code {
-    public List<Personas> Personas { get; set; }
+    public List<Prestamos> Prestamos { get; set; }
     public string Filtro { get; set; }
     public string Criterio { get; set; }
     public DateTime FechaDesde { get; set; } = DateTime.Now;
@@ -89,14 +88,14 @@
 
     private void Nuevo()
     {
-        Personas = new List<Personas>();
+        Prestamos = new List<Prestamos>();
         Filtro = "0";
         Criterio = string.Empty;
     }
 
     private void Buscar()
     {
-        Personas = new List<Personas>();
+        Prestamos = new List<Prestamos>();
 
         SetearFechas();
 
@@ -105,29 +104,35 @@
             switch(Filtro)
             {
                 case "0":
-                    Personas = PersonasBLL.GetList(p => true);
+                    Prestamos = PrestamosBLL.GetList(p => true);
                     break;
+
                 case "1":
-                    Personas = PersonasBLL.GetList(p => p.Nombres.ToLower().Contains(Criterio.ToLower()));
+
+                    List<Personas> Personas = PersonasBLL.GetList(per => (per.Nombres + " " + per.Apellidos).ToLower().Contains(Criterio.ToLower()));
+                    List<int> PersonasID = new List<int>();
+
+                    foreach(Personas persona in Personas)
+                    {
+                        PersonasID.Add(persona.PersonaID);
+                    }
+
+                    Prestamos = PrestamosBLL.GetList(p => PersonasID.Contains(p.PersonaID));
                     break;
+
                 case "2":
-                    Personas = PersonasBLL.GetList(p => p.Apellidos.ToLower().Contains(Criterio.ToLower()));
+                    Prestamos = PrestamosBLL.GetList(p => p.Concepto.ToLower().Contains(Criterio.ToLower()));
                     break;
-                case "3":
-                    Personas = PersonasBLL.GetList(p => p.Cedula.ToLower().Contains(Criterio.ToLower()));
-                    break;
-                case "4":
-                    Personas = PersonasBLL.GetList(p => p.Direccion.ToLower().Contains(Criterio.ToLower()));
-                    break;
+
             }
         }
         else
         {
-            Personas = PersonasBLL.GetList(p => true);
+            Prestamos = PrestamosBLL.GetList(p => p.Concepto.ToLower().Contains(Criterio.ToLower()));
         }
 
         if (FiltrarFecha)
-            Personas = Personas.Where(p => p.FechaNacimiento >= FechaDesde && p.FechaNacimiento <= FechaHasta).ToList();
+            Prestamos = Prestamos.Where(p => p.Fecha >= FechaDesde && p.Fecha <= FechaHasta).ToList();
     }
 
     private void SetearFechas()

@@ -1,8 +1,8 @@
-﻿@page "/r_personas"
+﻿@page "/r_prestamos"
 
-@inject IToastService toast 
+@inject IToastService toast
 
-<EditForm Model="Persona" OnValidSubmit="Guardar">
+<EditForm Model="Prestamo" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
 
     <div class="row d-flex justify-content-center">
@@ -12,15 +12,15 @@
             <div class="card mt-1">
 
                 <div class="card-header">
-                    <h3>Registro de personas</h3>
+                    <h3>Registro de préstamos</h3>
                 </div>
 
                 <div class="card-body">
                     <form>
-                        @*PersonaID*@
+                        @*PrestamoID*@
                         <div class="input-group my-2">
                             <label class="input-group-text col-md-3 col-4">ID</label>
-                            <InputNumber class="form-control" @bind-Value="Persona.PersonaID" />
+                            <InputNumber class="form-control" @bind-Value="Prestamo.PrestamoID" />
                             <button class="btn btn-warning" type="button" @onclick="Buscar">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                                     <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
@@ -28,47 +28,46 @@
                             </button>
                         </div>
 
-                        @*Nombres*@
+                        @*Fecha*@
                         <div class="input-group my-2">
-                            <label class="input-group-text col-md-3 col-4">Nombres</label>
-                            <InputText class="form-control" @bind-Value="Persona.Nombres" />
+                            <label class="input-group-text col-md-3 col-4">Fecha</label>
+                            <InputDate class="form-control" @bind-Value="Prestamo.Fecha" />
                         </div>
-                        <ValidationMessage For="@(()=> Persona.Nombres)" />
+                        <ValidationMessage For="@(()=> Prestamo.Fecha)" />
 
-                        @*Apellidos*@
+                        @*Persona*@
                         <div class="input-group my-2">
-                            <label class="input-group-text col-md-3 col-4">Apellidos</label>
-                            <InputText class="form-control" @bind-Value="Persona.Apellidos" />
+                            <label class="input-group-text col-md-3 col-4">Persona</label>
+                            <InputSelect class="form-control" @bind-Value="Prestamo.PersonaID">
+                                @foreach(var persona in Personas)
+                                {
+                                    <option value="@persona.PersonaID">@persona.Apellidos, @persona.Nombres</option>
+                                }
+                            </InputSelect>
                         </div>
-                        <ValidationMessage For="@(()=> Persona.Apellidos)" />
+                        <ValidationMessage For="@(()=> Prestamo.PersonaID)" />
 
-                        @*Cedula*@
+                        @*Concepto*@
                         <div class="input-group my-2">
-                            <label class="input-group-text col-md-3 col-4">Cédula</label>
-                            <InputText class="form-control" @bind-Value="Persona.Cedula"/>
+                            <label class="input-group-text col-md-3 col-4">Concepto</label>
+                            <InputText class="form-control" @bind-Value="Prestamo.Concepto" />
                         </div>
-                        <ValidationMessage For="@(()=> Persona.Cedula)" />
+                        <ValidationMessage For="@(()=> Prestamo.Concepto)" />
 
-                        @*Direccion*@
+                        @*Monto*@
                         <div class="input-group my-2">
-                            <label class="input-group-text col-md-3 col-4">Dirección</label>
-                            <InputText class="form-control" @bind-Value="Persona.Direccion" />
+                            <label class="input-group-text col-md-3 col-4">Monto</label>
+                            <InputNumber class="form-control" @bind-Value="Prestamo.Monto" />
                         </div>
-                        <ValidationMessage For="@(()=> Persona.Direccion)" />
-
-                        @*FechaNacimiento*@
-                        <div class="input-group my-2">
-                            <label class="input-group-text col-md-3 col-4">Nacimiento</label>
-                            <InputDate class="form-control" @bind-Value="Persona.FechaNacimiento" />
-                        </div>
-                        <ValidationMessage For="@(()=> Persona.FechaNacimiento)" />
+                        <ValidationMessage For="@(()=> Prestamo.Monto)" />
 
                         @*Balance*@
                         <div class="input-group my-2">
                             <label class="input-group-text col-md-3 col-4">Balance</label>
-                            <InputNumber class="form-control" @bind-Value="Persona.Balance" readonly/>
+                            <InputNumber class="form-control" @bind-Value="Prestamo.Balance" readonly/>
                         </div>
-                        <ValidationMessage For="@(()=> Persona.Balance)" />
+                        <ValidationMessage For="@(()=> Prestamo.Balance)" />
+
 
                     </form>
                 </div>
@@ -109,53 +108,52 @@
 </EditForm>
 
 @code {
-
-    private Personas Persona = new Personas();
+    private Prestamos Prestamo = new Prestamos();
+    public List<Personas> Personas { get; set; }
 
     protected override void OnInitialized()
     {
-        //Nuevo();
-        //Buscar();
+        Personas = PersonasBLL.GetList(p => true);
     }
 
     public void Nuevo()
     {
-        Persona = new Personas();
+        Prestamo = new Prestamos();
     }
 
     private void Buscar()
     {
-        var encontrado = PersonasBLL.Buscar(Persona.PersonaID);
+        var encontrado = PrestamosBLL.Buscar(Prestamo.PrestamoID);
 
         if (encontrado != null)
-            this.Persona = encontrado;
+            this.Prestamo = encontrado;
         else
-            toast.ShowWarning("Persona no encontrada");
+            toast.ShowWarning("Préstamo no encontrado");
     }
 
     public void Guardar()
     {
-        bool guardado = PersonasBLL.Guardar(Persona);
+        bool guardado = PrestamosBLL.Guardar(Prestamo);
 
         if (guardado)
         {
             Nuevo();
-            toast.ShowSuccess("Persona guardada correctamente");
+            toast.ShowSuccess("Prestamo guardado correctamente");
         }
         else
-            toast.ShowError("No se pudo guardar a la Persona");
+            toast.ShowError("No se pudo guardar el Préstamo");
     }
 
     public void Eliminar()
     {
-        bool eliminado = PersonasBLL.Eliminar(Persona.PersonaID);
+        bool eliminado = PrestamosBLL.Eliminar(Prestamo.PrestamoID);
 
         if (eliminado)
         {
             Nuevo();
-            toast.ShowSuccess("Persona eliminada correctamente");
+            toast.ShowSuccess("Préstamo eliminado correctamente");
         }
         else
-            toast.ShowError("No se pudo eliminar a la Persona");
+            toast.ShowError("No se pudo eliminar el Préstamo");
     }
 }
