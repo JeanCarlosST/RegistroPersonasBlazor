@@ -18,9 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Data\Registros.db">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <Folder Include="Data\" />
   </ItemGroup>
 
 </Project>

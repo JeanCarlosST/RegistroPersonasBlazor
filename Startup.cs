@@ -12,7 +12,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RegistroPersonasBlazor.DAL;
-using RegistroPersonasBlazor.Data;
 using Syncfusion.Blazor;
 
 namespace RegistroPersonasBlazor

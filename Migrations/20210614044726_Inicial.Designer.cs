@@ -9,7 +9,7 @@ using RegistroPersonasBlazor.DAL;
 namespace RegistroPersonasBlazor.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20210521193021_Inicial")]
+    [Migration("20210614044726_Inicial")]
     partial class Inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -17,6 +17,45 @@ namespace RegistroPersonasBlazor.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.6");
+
+            modelBuilder.Entity("RegistroPersonasBlazor.Models.Moras", b =>
+                {
+                    b.Property<int>("MoraID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("TEXT");
+
+                    b.Property<float>("Total")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("MoraID");
+
+                    b.ToTable("Moras");
+                });
+
+            modelBuilder.Entity("RegistroPersonasBlazor.Models.MorasDetalle", b =>
+                {
+                    b.Property<int>("MoraDetalleID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("MoraID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("PrestamoID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<float>("Valor")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("MoraDetalleID");
+
+                    b.HasIndex("MoraID");
+
+                    b.ToTable("MorasDetalle");
+                });
 
             modelBuilder.Entity("RegistroPersonasBlazor.Models.Personas", b =>
                 {
@@ -69,6 +108,9 @@ namespace RegistroPersonasBlazor.Migrations
                     b.Property<float>("Monto")
                         .HasColumnType("REAL");
 
+                    b.Property<float>("Mora")
+                        .HasColumnType("REAL");
+
                     b.Property<int>("PersonaID")
                         .HasColumnType("INTEGER");
 
@@ -79,6 +121,15 @@ namespace RegistroPersonasBlazor.Migrations
                     b.ToTable("Prestamos");
                 });
 
+            modelBuilder.Entity("RegistroPersonasBlazor.Models.MorasDetalle", b =>
+                {
+                    b.HasOne("RegistroPersonasBlazor.Models.Moras", null)
+                        .WithMany("Detalle")
+                        .HasForeignKey("MoraID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("RegistroPersonasBlazor.Models.Prestamos", b =>
                 {
                     b.HasOne("RegistroPersonasBlazor.Models.Personas", null)
@@ -86,6 +137,11 @@ namespace RegistroPersonasBlazor.Migrations
                         .HasForeignKey("PersonaID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("RegistroPersonasBlazor.Models.Moras", b =>
+                {
+                    b.Navigation("Detalle");
                 });
 
             modelBuilder.Entity("RegistroPersonasBlazor.Models.Personas", b =>
