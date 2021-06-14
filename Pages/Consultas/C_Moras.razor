@@ -1,0 +1,128 @@
+﻿@page "/c_moras"
+
+<EditForm Model="Moras">
+
+    <div class="row d-flex justify-content-center">
+
+        <div class="col-11">
+
+            <div class="card">
+
+                <div class="card-header">
+                    <h3>Consulta de moras</h3>
+                </div>
+
+                <div class="card-body">
+                    <form>
+                        <div class="row">
+                            <div class="input-group my-2 mr-2 col-3">
+                                <label class="input-group-text">Filtrar por fecha</label>
+                                <div class="input-group-text">
+                                    <InputCheckbox class="form-check-input m-0" @bind-Value="@FiltrarFecha" />
+                                </div>
+                            </div>
+
+                            <div class="input-group my-2 col">
+                                <label class="input-group-text">Desde</label>
+                                <InputDate class="form-control" @bind-Value="FechaDesde" />
+                                <label class="input-group-text">Hasta</label>
+                                <InputDate class="form-control" @bind-Value="FechaHasta" />
+                            </div>
+                        </div>
+
+                        <div class="input-group my-2">
+                            <InputSelect class="form-control col-3" @bind-Value="Filtro" style="width:150px;">
+                                <option value="0">Filtro</option>
+                                <option value="1">Total</option>
+                            </InputSelect>
+                            <InputText class="form-control" @bind-Value="Criterio" placeholder="Criterio" />
+                            <button class="btn btn-primary" type="button" @onclick="Buscar">Buscar</button>
+                        </div>
+
+                        <table class="table mt-4">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Fecha</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var mora in Moras)
+                                {
+                                    <tr>
+                                        <th class="align-middle">@mora.MoraID</th>
+                                        <td class="align-middle">@mora.Fecha</td>
+                                        <td class="align-middle">@mora.Total.ToString("N2")</td>
+                                        <td class="d-flex justify-content-center">
+                                            <a class="btn btn-success" type="button" href="/r_moras/@mora.MoraID">
+                                                <span class="oi oi-pencil"></span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</EditForm>
+
+@code {
+    public List<Moras> Moras { get; set; }
+    public string Filtro { get; set; }
+    public string Criterio { get; set; }
+    public DateTime FechaDesde { get; set; } = DateTime.Now;
+    public DateTime FechaHasta { get; set; } = DateTime.Now;
+    public bool FiltrarFecha { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Nuevo();
+    }
+
+    private void Nuevo()
+    {
+        Moras = new List<Moras>();
+        Filtro = "0";
+        Criterio = string.Empty;
+    }
+
+    public void Buscar()
+    {
+        Moras = new List<Moras>();
+
+        SetearFechas();
+
+        if (Criterio.Length > 0)
+        {
+            switch (Filtro)
+            {
+                case "0":
+                    Moras = MorasBLL.GetList(m => true);
+                    break;
+
+                case "1":
+                    Moras = MorasBLL.GetList(m => m.Total >= int.Parse(Criterio));
+                    break;
+            }
+        }
+        else
+        {
+            Moras = MorasBLL.GetList(m => true);
+        }
+
+        if (FiltrarFecha)
+            Moras = Moras.Where(m => m.Fecha >= FechaDesde && m.Fecha <= FechaHasta).ToList();
+    }
+
+    private void SetearFechas()
+    {
+        FechaDesde = new DateTime(FechaDesde.Year, FechaDesde.Month, FechaDesde.Day, 0, 0, 0);
+        FechaHasta = new DateTime(FechaHasta.Year, FechaHasta.Month, FechaHasta.Day, 23, 59, 59);
+    }
+}
