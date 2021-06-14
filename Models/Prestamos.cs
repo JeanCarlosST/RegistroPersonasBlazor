@@ -25,5 +25,7 @@ namespace RegistroPersonasBlazor.Models
         [Required(ErrorMessage = "Ingrese un balance")]
         public float Balance { get; set; }
 
+        public float Mora { get; set; }
+
     }
 }
